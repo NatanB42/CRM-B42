@@ -74,17 +74,6 @@ const ListIdDisplay: React.FC<ListIdDisplayProps> = ({ lists }) => {
           </div>
         ))}
       </div>
-
-      <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-        <h4 className="text-sm font-medium text-blue-800 mb-2">Como usar no webhook:</h4>
-        <code className="text-xs text-blue-700 bg-blue-100 p-2 rounded block">
-          {`{
-  "name": "João Silva",
-  "email": "joao@exemplo.com",
-  "listId": "ID_DA_LISTA_AQUI"
-}`}
-        </code>
-      </div>
     </div>
   );
 };

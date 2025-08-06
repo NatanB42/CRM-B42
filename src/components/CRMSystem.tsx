@@ -21,11 +21,13 @@ import { exportContactsToCSV } from '../utils/csvExport';
 import Dashboard from './Dashboard';
 import ContactManager from './ContactManager';
 import ListManager from './ListManager';
+import ListIdDisplay from './ListIdDisplay';
 import { PipelineManager } from './PipelineManager';
 import AgentManager from './AgentManager';
 import SettingsPanel from './SettingsPanel';
 import FolderManager from './FolderManager';
 import ToastContainer from './ToastContainer';
+ 
 
 const CRMSystem: React.FC = () => {
   const [data, setData] = useState<CRMData>({
@@ -128,9 +130,11 @@ const CRMSystem: React.FC = () => {
     { id: 'dashboard', name: 'Dashboard', icon: BarChart3 },
     { id: 'contacts', name: 'Contatos', icon: Users },
     { id: 'lists', name: 'Listas', icon: List },
+    { id: 'list-ids', name: 'IDs das Listas', icon: List },
     { id: 'agents', name: 'Atendentes', icon: UserCheck },
     { id: 'folders', name: 'Pastas', icon: Folder },
     { id: 'settings', name: 'Configurações', icon: Settings },
+    
   ];
 
   if (loading) {
@@ -185,6 +189,9 @@ const CRMSystem: React.FC = () => {
             onOpenListPipeline={handleOpenListPipeline}
           />
         );
+        case 'list-ids':
+          return <ListIdDisplay lists={data.lists} />;
+
       case 'pipeline':
         return (
           <PipelineManager
