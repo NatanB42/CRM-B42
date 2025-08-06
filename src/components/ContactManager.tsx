@@ -331,7 +331,7 @@ const ContactManager: React.FC<ContactManagerProps> = ({ data, onDataChange, onE
 
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-900">Gerenciar Contatos</h2>
+      
         <div className="flex space-x-3">
           <button
             onClick={() => setShowImportModal(true)}
