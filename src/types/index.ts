@@ -22,11 +22,18 @@ export interface List {
   description: string;
   color: string;
   distributionRules: DistributionRule[];
+  outgoingWebhooks?: OutgoingWebhookConfig[];
 }
 
 export interface DistributionRule {
   agentId: string;
   percentage: number;
+}
+
+export interface OutgoingWebhookConfig {
+  url: string;
+  enabled?: boolean;
+  headers?: Record<string, string>;
 }
 
 export interface Agent {
