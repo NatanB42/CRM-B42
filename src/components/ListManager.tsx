@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Plus, Edit2, Trash2, Users, Target, ArrowRight } from 'lucide-react';
+import { Plus, Edit2, Trash2, Users, Target, ArrowRight, Send } from 'lucide-react';
 import { List, CRMData, DistributionRule } from '../types';
 import { createList, updateList, deleteList } from '../lib/database';
+import WebhookTestModal from './WebhookTestModal';
 
 interface ListManagerProps {
   data: CRMData;
@@ -12,6 +13,8 @@ interface ListManagerProps {
 const ListManager: React.FC<ListManagerProps> = ({ data, onDataChange, onOpenListPipeline }) => {
   const [showForm, setShowForm] = useState(false);
   const [editingList, setEditingList] = useState<List | null>(null);
+  const [showWebhookTest, setShowWebhookTest] = useState(false);
+  const [testingList, setTestingList] = useState<List | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -99,6 +102,11 @@ const ListManager: React.FC<ListManagerProps> = ({ data, onDataChange, onOpenLis
     return formData.distributionRules.reduce((sum, rule) => sum + rule.percentage, 0);
   };
 
+  const handleTestWebhooks = (list: List) => {
+    setTestingList(list);
+    setShowWebhookTest(true);
+  };
+
   const colorOptions = [
     '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', 
     '#EC4899', '#14B8A6', '#F97316', '#6366F1', '#84CC16'
@@ -168,15 +176,31 @@ const ListManager: React.FC<ListManagerProps> = ({ data, onDataChange, onOpenLis
                   <Target className="h-4 w-4 mr-1" />
                   {(list.distributionRules || []).length} regra(s)
                 </div>
+                <div className="flex items-center">
+                  <Send className="h-4 w-4 mr-1" />
+                  {(list.outgoingWebhooks || []).filter(w => w.enabled !== false).length} webhook(s)
+                </div>
               </div>
 
-              <button
-                onClick={() => onOpenListPipeline(list.id)}
-                className="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-600 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                <ArrowRight className="h-4 w-4 mr-2" />
-                Abrir Funil
-              </button>
+              <div className="space-y-2">
+                <button
+                  onClick={() => onOpenListPipeline(list.id)}
+                  className="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-600 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  <ArrowRight className="h-4 w-4 mr-2" />
+                  Abrir Funil
+                </button>
+                
+                {(list.outgoingWebhooks || []).length > 0 && (
+                  <button
+                    onClick={() => handleTestWebhooks(list)}
+                    className="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    <Send className="h-4 w-4 mr-2" />
+                    Testar Webhooks
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         ))}
@@ -316,6 +340,18 @@ const ListManager: React.FC<ListManagerProps> = ({ data, onDataChange, onOpenLis
             </div>
           </div>
         </div>
+      )}
+
+      {/* Webhook Test Modal */}
+      {showWebhookTest && testingList && (
+        <WebhookTestModal
+          isOpen={showWebhookTest}
+          onClose={() => {
+            setShowWebhookTest(false);
+            setTestingList(null);
+          }}
+          list={testingList}
+        />
       )}
     </div>
   );

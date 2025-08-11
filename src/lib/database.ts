@@ -791,7 +791,8 @@ export const getLists = async (): Promise<List[]> => {
       name: record.name,
       description: record.description || '',
       color: record.color,
-      distributionRules: record.distribution_rules || []
+      distributionRules: record.distribution_rules || [],
+      outgoingWebhooks: record.outgoing_webhooks || []
     }));
   } catch (error) {
     console.error('Error fetching lists:', error);
@@ -806,7 +807,8 @@ export const createList = async (list: Omit<List, 'id'>): Promise<List> => {
       name: list.name,
       description: list.description,
       color: list.color,
-      distribution_rules: list.distributionRules
+      distribution_rules: list.distributionRules,
+      outgoing_webhooks: list.outgoingWebhooks || []
     })
     .select()
     .single();
@@ -818,7 +820,8 @@ export const createList = async (list: Omit<List, 'id'>): Promise<List> => {
     name: data.name,
     description: data.description || '',
     color: data.color,
-    distributionRules: data.distribution_rules || []
+    distributionRules: data.distribution_rules || [],
+    outgoingWebhooks: data.outgoing_webhooks || []
   };
 };
 
@@ -829,6 +832,7 @@ export const updateList = async (id: string, list: Partial<List>): Promise<List>
   if (list.description !== undefined) updateData.description = list.description;
   if (list.color !== undefined) updateData.color = list.color;
   if (list.distributionRules !== undefined) updateData.distribution_rules = list.distributionRules;
+  if (list.outgoingWebhooks !== undefined) updateData.outgoing_webhooks = list.outgoingWebhooks;
 
   const { data, error } = await supabase
     .from('lists')
@@ -844,7 +848,8 @@ export const updateList = async (id: string, list: Partial<List>): Promise<List>
     name: data.name,
     description: data.description || '',
     color: data.color,
-    distributionRules: data.distribution_rules || []
+    distributionRules: data.distribution_rules || [],
+    outgoingWebhooks: data.outgoing_webhooks || []
   };
 };
 
