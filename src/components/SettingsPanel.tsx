@@ -56,6 +56,35 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ data, onDataChange }) => 
     }
   };
 
+  const outgoingWebhookExample = {
+    event: 'contact_added_to_list',
+    timestamp: new Date().toISOString(),
+    contact: {
+      id: 'contact-uuid',
+      name: 'João Silva',
+      email: 'joao@exemplo.com',
+      phone: '(11) 99999-9999',
+      company: 'Empresa XYZ',
+      instagram: '@joaosilva',
+      source: 'Website',
+      notes: 'Lead interessado',
+      custom_fields: { campo1: 'valor1' },
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    list: {
+      id: 'list-uuid',
+      name: 'Leads Gerais'
+    },
+    assigned_agent: {
+      id: 'agent-uuid',
+      name: 'Maria Santos',
+      email: 'maria@empresa.com',
+      phone: '(11) 88888-8888',
+      role: 'Vendedora'
+    }
+  };
+
   // Tag management
   const handleTagSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -271,7 +300,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ data, onDataChange }) => 
             } whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center`}
           >
             <Globe className="h-4 w-4 mr-2" />
-            Webhook
+            Webhooks
           </button>
         </nav>
       </div>
@@ -389,13 +418,23 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ data, onDataChange }) => 
       {/* Webhook Tab */}
       {activeTab === 'integrations' && (
         <div className="space-y-6">
-          <h3 className="text-lg font-medium text-gray-900">Webhook para Receber Contatos</h3>
+          <h3 className="text-lg font-medium text-gray-900">Configuração de Webhooks</h3>
           
-          <div className="bg-white shadow rounded-lg p-6">
+          {/* Incoming Webhooks */}
+          <div className="bg-white shadow rounded-lg p-6 space-y-6">
+            <div>
+              <h4 className="text-md font-medium text-gray-900 mb-2">
+                Webhook de Entrada (Receber Contatos)
+              </h4>
+              <p className="text-sm text-gray-600 mb-4">
+                Use esta URL para receber contatos de formulários externos, Zapier ou outras integrações.
+              </p>
+            </div>
+            
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  URL do Webhook (Supabase Edge Function)
+                  URL do Webhook de Entrada
                 </label>
                 <div className="flex items-center space-x-2">
                   <input
@@ -412,7 +451,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ data, onDataChange }) => 
                   </button>
                 </div>
                 <p className="mt-1 text-sm text-gray-500">
-                  Use esta URL para enviar contatos de formulários externos, Zapier, ou outras integrações.
+                  Envie dados de contatos via POST para esta URL.
                 </p>
               </div>
 
@@ -477,6 +516,58 @@ ${JSON.stringify(webhookExample.body, null, 2)}`}
                   Copiar Exemplo
                 </button>
               </div>
+            </div>
+          </div>
+
+          {/* Outgoing Webhooks */}
+          <div className="bg-white shadow rounded-lg p-6 space-y-6">
+            <div>
+              <h4 className="text-md font-medium text-gray-900 mb-2">
+                Webhooks de Saída (Enviar Dados)
+              </h4>
+              <p className="text-sm text-gray-600 mb-4">
+                Configure webhooks de saída nas listas para enviar dados de contatos automaticamente para sistemas externos quando contatos são adicionados ou atualizados.
+              </p>
+            </div>
+
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h5 className="text-sm font-medium text-blue-900 mb-2">Como Configurar Webhooks de Saída</h5>
+              <ol className="text-sm text-blue-800 space-y-1 list-decimal list-inside">
+                <li>Vá para a aba "Listas" no menu lateral</li>
+                <li>Edite uma lista existente ou crie uma nova</li>
+                <li>Na seção "Webhooks de Saída", adicione as URLs desejadas</li>
+                <li>Marque como "Ativo" os webhooks que devem receber dados</li>
+                <li>Salve a lista</li>
+              </ol>
+            </div>
+
+            <div>
+              <h5 className="text-sm font-medium text-gray-900 mb-3">Payload Enviado pelos Webhooks de Saída</h5>
+              <div className="bg-gray-50 rounded-lg p-4">
+                <pre className="text-xs text-gray-600 overflow-x-auto whitespace-pre-wrap">
+{JSON.stringify(outgoingWebhookExample, null, 2)}
+                </pre>
+              </div>
+            </div>
+
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h5 className="text-sm font-medium text-yellow-900 mb-2">Quando os Webhooks são Disparados</h5>
+              <ul className="text-sm text-yellow-800 space-y-1 list-disc list-inside">
+                <li>Quando um novo contato é adicionado à lista</li>
+                <li>Quando um contato é movido para a lista</li>
+                <li>Quando o vendedor atribuído ao contato é alterado</li>
+              </ul>
+            </div>
+
+            <div className="bg-green-50 rounded-lg p-4">
+              <h5 className="text-sm font-medium text-green-900 mb-2">Recursos dos Webhooks de Saída</h5>
+              <ul className="text-sm text-green-800 space-y-1 list-disc list-inside">
+                <li>Múltiplos webhooks por lista</li>
+                <li>Cabeçalhos HTTP personalizados</li>
+                <li>Ativar/desativar individualmente</li>
+                <li>Dados completos do contato e vendedor</li>
+                <li>Processamento automático via triggers</li>
+              </ul>
             </div>
           </div>
         </div>
