@@ -9,6 +9,7 @@ import {
   LogOut,
   Menu,
   X
+  Send
 } from 'lucide-react';
 import { useToast } from '../hooks/useToast';
 import { useRealtime } from '../hooks/useRealtime';
@@ -26,6 +27,7 @@ import { PipelineManager } from './PipelineManager';
 import AgentManager from './AgentManager';
 import SettingsPanel from './SettingsPanel';
 import FolderManager from './FolderManager';
+import WebhookListsManager from './WebhookListsManager';
 import ToastContainer from './ToastContainer';
  
 
@@ -131,6 +133,7 @@ const CRMSystem: React.FC = () => {
     { id: 'contacts', name: 'Contatos', icon: Users },
     { id: 'lists', name: 'Listas', icon: List },
     { id: 'list-ids', name: 'IDs das Listas', icon: List },
+    { id: 'webhook-lists', name: 'Webhook Listas', icon: Send },
     { id: 'agents', name: 'Atendentes', icon: UserCheck },
     { id: 'folders', name: 'Pastas', icon: Folder },
     { id: 'settings', name: 'Configurações', icon: Settings },
@@ -192,6 +195,8 @@ const CRMSystem: React.FC = () => {
         case 'list-ids':
           return <ListIdDisplay lists={data.lists} />;
 
+      case 'webhook-lists':
+        return <WebhookListsManager data={data} onDataChange={loadData} />;
       case 'pipeline':
         return (
           <PipelineManager
