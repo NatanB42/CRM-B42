@@ -8,7 +8,7 @@ import {
   Folder,
   LogOut,
   Menu,
-  X
+  X,
   Send
 } from 'lucide-react';
 import { useToast } from '../hooks/useToast';
