@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Edit2, Trash2, Send, ToggleLeft, ToggleRight, Globe, AlertCircle, CheckCircle, Copy, Eye, EyeOff } from 'lucide-react';
+import { Plus, Edit2, Trash2, Send, ToggleLeft, ToggleRight, Globe, AlertCircle, CheckCircle, Copy, Eye, EyeOff, X } from 'lucide-react';
 import { List, CRMData, OutgoingWebhookConfig } from '../types';
 import { updateList } from '../lib/database';
 import { useToast } from '../hooks/useToast';
