@@ -86,7 +86,7 @@ serve(async (req) => {
             phone: contactData.phone || '',
             company: contactData.company || '',
             instagram: contactData.instagram || '',
-            custom_fields: contactData.customFields || {},
+            custom_fields: contactData.customFields || contactData.custom_fields || {},
             source: contactData.source || 'Webhook',
             notes: contactData.notes || ''
           })
@@ -251,7 +251,7 @@ serve(async (req) => {
         stage_id: cleanUUID(defaultStage.id),
         assigned_agent_id: assignedAgentId,
         tags: Array.isArray(contactData.tags) ? contactData.tags : [],
-        custom_fields: contactData.customFields || {},
+        custom_fields: contactData.customFields || contactData.custom_fields || {},
         source: contactData.source || 'Webhook',
         notes: contactData.notes || ''
       })
