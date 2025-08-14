@@ -50,8 +50,9 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ data, onDataChange }) => 
       company: "Empresa XYZ",
       source: "Website",
       listId: data.lists[0]?.id || "",
+      instagram: "@joaosilva",
       customFields: {
-        "campo1": "valor1"
+        [data.customFields[0]?.id || "campo_exemplo"]: "valor_exemplo"
       }
     }
   };
