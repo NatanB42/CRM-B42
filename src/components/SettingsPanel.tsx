@@ -50,9 +50,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ data, onDataChange }) => 
       company: "Empresa XYZ",
       source: "Website",
       listId: data.lists[0]?.id || "",
-      instagram: "@joaosilva",
       customFields: {
-        [data.customFields[0]?.id || "campo_exemplo"]: "valor_exemplo"
+        "campo1": "valor1"
       }
     }
   };
@@ -466,6 +465,29 @@ Authorization: Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}
 
 ${JSON.stringify(webhookExample.body, null, 2)}`}
                   </pre>
+                </div>
+                <div className="mt-3 p-3 bg-blue-50 rounded-lg">
+                  <h5 className="text-sm font-medium text-blue-900 mb-2">Exemplo com Campos Personalizados</h5>
+                  <pre className="text-xs text-blue-800 overflow-x-auto whitespace-pre-wrap">
+{`{
+  "name": "João Silva",
+  "email": "joao@exemplo.com",
+  "phone": "(11) 99999-9999",
+  "company": "Empresa XYZ",
+  "instagram": "@joaosilva",
+  "source": "Website",
+  "listId": "${data.lists[0]?.id || 'lista-id'}",
+  "customFields": {
+    "${data.customFields[0]?.id || 'campo-id'}": "valor do campo",
+    "${data.customFields[1]?.id || 'outro-campo-id'}": "outro valor"
+  },
+  "notes": "Observações do lead"
+}`}
+                  </pre>
+                  <p className="mt-2 text-xs text-blue-700">
+                    <strong>Importante:</strong> Use os IDs reais dos campos personalizados como chaves no objeto customFields.
+                    Você pode encontrar os IDs na aba "Configurações > Campos Personalizados".
+                  </p>
                 </div>
               </div>
 
