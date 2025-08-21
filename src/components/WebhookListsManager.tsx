@@ -162,11 +162,16 @@ const WebhookListsManager: React.FC<WebhookListsManagerProps> = ({ data, onDataC
     setTestingWebhook({ listId, index });
     setTestResult(null);
 
+    console.log('🧪 Testando webhook:', webhook.url);
+    console.log('📦 Payload de teste:', samplePayload);
     try {
       const response = await fetch(webhook.url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'User-Agent': 'CRM-B42-Test/1.0',
+          'X-Webhook-Source': 'CRM-B42-Test',
+          'X-Event-Type': 'test',
           ...webhook.headers,
         },
         body: JSON.stringify({
@@ -174,11 +179,19 @@ const WebhookListsManager: React.FC<WebhookListsManagerProps> = ({ data, onDataC
           list: {
             id: listId,
             name: list.name
-          }
+          },
+          test: true,
+          test_timestamp: new Date().toISOString()
         }),
       });
 
       const responseText = await response.text();
+      
+      console.log('📨 Resposta do teste:', {
+        status: response.status,
+        statusText: response.statusText,
+        response: responseText
+      });
       
       setTestResult({
         success: response.ok,
@@ -188,6 +201,7 @@ const WebhookListsManager: React.FC<WebhookListsManagerProps> = ({ data, onDataC
         url: webhook.url
       });
     } catch (error) {
+      console.error('❌ Erro no teste do webhook:', error);
       setTestResult({
         success: false,
         error: error.message,

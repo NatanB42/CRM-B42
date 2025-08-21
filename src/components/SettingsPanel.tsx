@@ -221,6 +221,9 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ data, onDataChange }) => 
 
   const testWebhook = async () => {
     try {
+      console.log('🧪 Testando webhook de entrada:', webhookUrl);
+      console.log('📦 Dados de teste:', webhookExample.body);
+      
       const response = await fetch(webhookUrl, {
         method: 'POST',
         headers: {
@@ -229,14 +232,18 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ data, onDataChange }) => 
         },
         body: JSON.stringify({
           ...webhookExample.body,
-          instagram: '@usuario_teste'
+          instagram: '@usuario_teste',
+          test: true,
+          test_timestamp: new Date().toISOString()
         })
       });
       
       const result = await response.json();
       
+      console.log('📨 Resposta do webhook de entrada:', result);
+      
       if (result.success) {
-        alert('Webhook de teste enviado com sucesso! Verifique a lista de contatos.');
+        alert(`Webhook de teste enviado com sucesso! ${result.updated ? 'Contato atualizado' : 'Novo contato criado'}. Verifique a lista de contatos.`);
         onDataChange();
       } else {
         alert(`Erro no webhook: ${result.error}`);

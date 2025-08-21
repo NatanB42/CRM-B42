@@ -662,6 +662,7 @@ export const createContact = async (contact: Omit<Contact, 'id' | 'createdAt' | 
   }
 
   console.log('✅ Contato criado com sucesso:', data.id);
+  console.log('🔔 Webhooks de saída serão processados automaticamente pelo trigger');
 
   return {
     id: data.id,
@@ -730,6 +731,7 @@ export const updateContact = async (id: string, contact: Partial<Contact>): Prom
   }
 
   console.log('✅ SUCESSO: Contato salvo no banco:', data.id, 'Nova etapa:', data.stage_id);
+  console.log('🔔 Webhooks de saída serão processados automaticamente pelo trigger se houve mudança de lista/etapa/agente');
 
   return {
     id: data.id,
