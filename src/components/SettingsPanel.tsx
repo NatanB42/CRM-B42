@@ -486,7 +486,7 @@ ${JSON.stringify(webhookExample.body, null, 2)}`}
                   </pre>
                   <p className="mt-2 text-xs text-blue-700">
                     <strong>Importante:</strong> Use os IDs reais dos campos personalizados como chaves no objeto customFields.
-                    Você pode encontrar os IDs na aba "Configurações > Campos Personalizados".
+                    Você pode encontrar os IDs na aba "Configurações {'>'}  Campos Personalizados".
                   </p>
                 </div>
               </div>
