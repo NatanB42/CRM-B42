@@ -243,7 +243,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ data, onDataChange }) => 
       console.log('📨 Resposta do webhook de entrada:', result);
       
       if (result.success) {
-        alert(`Webhook de teste enviado com sucesso! ${result.updated ? 'Contato atualizado' : 'Novo contato criado'}. Verifique a lista de contatos.`);
+        alert(`Webhook de entrada testado com sucesso! ${result.updated ? 'Contato atualizado' : 'Novo contato criado'}. Agora teste os webhooks de saída na aba "Webhook Listas".`);
         onDataChange();
       } else {
         alert(`Erro no webhook: ${result.error}`);
@@ -537,7 +537,7 @@ ${JSON.stringify(webhookExample.body, null, 2)}`}
                   onClick={testWebhook}
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                 >
-                  Testar Webhook
+                  Testar Webhook de Entrada
                 </button>
                 <button
                   onClick={() => copyToClipboard(JSON.stringify(webhookExample.body, null, 2))}
@@ -545,6 +545,13 @@ ${JSON.stringify(webhookExample.body, null, 2)}`}
                 >
                   Copiar Exemplo
                 </button>
+              </div>
+              
+              <div className="mt-4 p-3 bg-orange-50 rounded-lg">
+                <p className="text-sm text-orange-800">
+                  <strong>Próximo passo:</strong> Após testar o webhook de entrada, vá para a aba "Webhook Listas" 
+                  no menu lateral para configurar e testar os webhooks de saída que são disparados automaticamente.
+                </p>
               </div>
             </div>
           </div>

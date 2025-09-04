@@ -42,9 +42,12 @@ VITE_SUPABASE_ANON_KEY=sua_chave_anonima
 ### 3. Configurar Edge Function (Webhook)
 
 1. No painel do Supabase, vá para Edge Functions
-2. Crie uma nova função chamada `webhook-contacts`
-3. Cole o código do arquivo `supabase/functions/webhook-contacts/index.ts`
-4. Faça o deploy da função
+2. Crie duas funções:
+   - `webhook-contacts` (para receber contatos)
+   - `send-contact-webhook` (para enviar webhooks de saída)
+3. Cole o código dos respectivos arquivos em `supabase/functions/`
+4. Faça o deploy das funções
+5. **IMPORTANTE**: Atualize a URL do Supabase na migração `fix_webhook_function_call.sql` substituindo `https://your-project.supabase.co` pela URL real do seu projeto
 
 ### 4. Instalar e Executar
 
@@ -117,6 +120,15 @@ Quando você criar novos campos personalizados:
 4. **Webhook**: Novos campos são aceitos automaticamente
 
 ## 🔧 Estrutura do Banco
+
+### ⚠️ Configuração Importante dos Webhooks
+
+Para que os webhooks de saída funcionem corretamente:
+
+1. **Execute as migrações na ordem correta**
+2. **Atualize a URL do Supabase** na migração `fix_webhook_function_call.sql`
+3. **Ative as Edge Functions** no painel do Supabase
+4. **Teste usando o painel de debug** em "Webhook Listas"
 
 ### Tabelas Criadas Automaticamente:
 
@@ -242,6 +254,12 @@ O sistema distribui automaticamente os leads entre os atendentes baseado nas reg
 - Faça backup regular via exportação de dados
 
 ## 🆘 Solução de Problemas
+
+### Webhooks de saída não funcionam
+- Execute a migração `fix_outgoing_webhooks_triggers.sql`
+- Verifique se as Edge Functions estão ativas
+- Use o painel de debug em "Webhook Listas" > "Debug Webhooks"
+- Atualize a URL do Supabase na configuração dos triggers
 
 ### Erro de conexão com Supabase
 - Verifique se as variáveis de ambiente estão corretas

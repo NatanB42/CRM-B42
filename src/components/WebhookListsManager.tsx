@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Plus, Edit2, Trash2, Send, ToggleLeft, ToggleRight, Globe, AlertCircle, CheckCircle, Copy, Eye, EyeOff, X } from 'lucide-react';
+import { Plus, Edit2, Trash2, Send, ToggleLeft, ToggleRight, Globe, AlertCircle, CheckCircle, Copy, Eye, EyeOff, X, Bug } from 'lucide-react';
 import { List, CRMData, OutgoingWebhookConfig } from '../types';
 import { updateList } from '../lib/database';
 import { useToast } from '../hooks/useToast';
+import WebhookDebugPanel from './WebhookDebugPanel';
 
 interface WebhookListsManagerProps {
   data: CRMData;
@@ -16,6 +17,7 @@ const WebhookListsManager: React.FC<WebhookListsManagerProps> = ({ data, onDataC
   const [testingWebhook, setTestingWebhook] = useState<{ listId: string; index: number } | null>(null);
   const [testResult, setTestResult] = useState<any>(null);
   const [showPayload, setShowPayload] = useState(false);
+  const [showDebugPanel, setShowDebugPanel] = useState(false);
   const [formData, setFormData] = useState({
     url: '',
     enabled: true,
@@ -255,18 +257,27 @@ const WebhookListsManager: React.FC<WebhookListsManagerProps> = ({ data, onDataC
             Configure webhooks de saída para enviar dados de contatos automaticamente para sistemas externos
           </p>
         </div>
-        {selectedList && (
+        <div className="flex space-x-3">
           <button
-            onClick={() => {
-              setSelectedList(selectedList);
-              setShowForm(true);
-            }}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            onClick={() => setShowDebugPanel(true)}
+            className="inline-flex items-center px-4 py-2 border border-orange-300 text-sm font-medium rounded-md shadow-sm text-orange-700 bg-orange-50 hover:bg-orange-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
           >
-            <Plus className="h-4 w-4 mr-2" />
-            Novo Webhook
+            <Bug className="h-4 w-4 mr-2" />
+            Debug Webhooks
           </button>
-        )}
+          {selectedList && (
+            <button
+              onClick={() => {
+                setSelectedList(selectedList);
+                setShowForm(true);
+              }}
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Novo Webhook
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Lists Grid */}
@@ -724,8 +735,51 @@ const WebhookListsManager: React.FC<WebhookListsManagerProps> = ({ data, onDataC
           </div>
         </div>
       )}
+
+      {/* Debug Panel */}
+      <WebhookDebugPanel
+        isOpen={showDebugPanel}
+        onClose={() => setShowDebugPanel(false)}
+      />
     </div>
   );
 };
+
+  const handleToggleEnabled = async (listId: string, index: number) => {
+    const list = data.lists.find(l => l.id === listId);
+    if (!list || !list.outgoingWebhooks) return;
+
+    try {
+      const newWebhooks = [...list.outgoingWebhooks];
+      newWebhooks[index] = {
+        ...newWebhooks[index],
+        enabled: !newWebhooks[index].enabled
+      };
+
+      await updateList(listId, { outgoingWebhooks: newWebhooks });
+      onDataChange();
+      toast.success(newWebhooks[index].enabled ? 'Webhook ativado!' : 'Webhook desativado!');
+    } catch (error) {
+      console.error('Error toggling webhook:', error);
+      toast.error('Erro ao alterar status do webhook');
+    }
+  };
+
+  const handleDelete = async (listId: string, index: number) => {
+    const list = data.lists.find(l => l.id === listId);
+    if (!list || !list.outgoingWebhooks) return;
+
+    if (confirm('Tem certeza que deseja excluir este webhook?')) {
+      try {
+        const newWebhooks = list.outgoingWebhooks.filter((_, i) => i !== index);
+        await updateList(listId, { outgoingWebhooks: newWebhooks });
+        onDataChange();
+        toast.success('Webhook excluído!');
+      } catch (error) {
+        console.error('Error deleting webhook:', error);
+        toast.error('Erro ao excluir webhook');
+      }
+    }
+  };
 
 export default WebhookListsManager;
